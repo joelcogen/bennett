@@ -42,11 +42,16 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    if @project.update_attributes(params[:project])
-      flash[:success] = 'Project was successfully updated.'
-      redirect_to @project
+    if request.xhr?
+      @project.fetch_branches
+      render partial: "form"
     else
-      params[:project][:commands_attributes].present? ? redirect_to(@project) : render(:edit)
+      if @project.update_attributes(params[:project])
+        flash[:success] = 'Project was successfully updated.'
+        redirect_to @project
+      else
+        params[:project][:commands_attributes].present? ? redirect_to(@project) : render(:edit)
+      end
     end
   end
 

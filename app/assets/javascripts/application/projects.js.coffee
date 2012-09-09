@@ -15,8 +15,8 @@ $ ->
   $("#fetch-git-link").live "click", (e) ->
     e.preventDefault()
     form = $(e.target).closest("form")
-    $("#fetch-git-link").hide()
-    $("#fetch-loader").show()
+    $("#fetch-git-link, #fetch-success, #fetch-error").hide()
+    $("#fetch-loading").show()
     $.ajax
       url: form.attr("action")
       type: "post"
@@ -24,18 +24,18 @@ $ ->
       success: (data) ->
         form.replaceWith(data)
         $("#fetch-git-link").hide()
-        $("#fetch-loader").hide()
+        $("#fetch-loading").hide()
         $("#fetch-success").show()
       error: ->
         $("#fetch-git-link").show()
-        $("#fetch-loader").hide()
+        $("#fetch-loading").hide()
         $("#fetch-error").show()
         $("#project_git_url").focus()
 
   $("#project_git_url").live "change", (e) ->
     $("#fetched-project-fields").remove()
     $("#fetch-git-link").show()
-    $("#fetch-success #fetch-error #fetch-loader").hide()
+    $("#fetch-success, #fetch-error, #fetch-loading").hide()
 
   $("#project_test_all_branches").change ->
     $("ul.branches li.branch").toggle()

@@ -1,6 +1,6 @@
 class SuperGit
   def self.branches_for_url(url)
-    return ["deploy", "master", "new-builder", "public-projects"]
+    #return ["deploy", "master", "new-builder", "public-projects"]
     tmpdir = Dir.mktmpdir
     system "git clone --no-checkout #{url} #{tmpdir}" # This cannot be done using Git :(
     branches = Git.open(tmpdir).branches.remote.collect do |branch|
