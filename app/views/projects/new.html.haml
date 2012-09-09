@@ -3,11 +3,10 @@
     New project
   %span.line
   .btn-box
-    = link_to projects_path, :class => "btn pull-right" do
+    = link_to projects_path, class: "btn pull-right" do
       Back
       %span.hide-responsive
         to the project list
   .clear
 
-= render :partial => "form", :locals => { :project => @project }
-
+= render "form"

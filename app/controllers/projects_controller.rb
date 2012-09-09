@@ -1,3 +1,5 @@
+require "super_git"
+
 class ProjectsController < ApplicationController
   load_and_authorize_resource :except => :add_user_or_invite
 
@@ -14,7 +16,7 @@ class ProjectsController < ApplicationController
     @pending_invitations = Invitation.find_all_by_project_id(@project.id)
     respond_to do |format|
       format.html
-      format.js { render partial: 'projects/builds', locals: {project: @project, builds: @builds} }
+      format.js { render partial: "projects/builds", locals: {project: @project, builds: @builds} }
     end
   end
 
@@ -25,11 +27,16 @@ class ProjectsController < ApplicationController
   end
 
   def create
-    if @project.save
-      flash[:success] = 'Project was successfully created.'
-      redirect_to @project
+    if request.xhr?
+      @project.fetch_branches
+      render partial: "form"
     else
-      render action: "new"
+      if @project.save
+        flash[:success] = 'Project was successfully created.'
+        redirect_to @project
+      else
+        render :new
+      end
     end
   end
 
@@ -38,7 +45,7 @@ class ProjectsController < ApplicationController
       flash[:success] = 'Project was successfully updated.'
       redirect_to @project
     else
-      params[:project][:commands_attributes].present? ? redirect_to(@project) : render(action: "edit")
+      params[:project][:commands_attributes].present? ? redirect_to(@project) : render(:edit)
     end
   end
 

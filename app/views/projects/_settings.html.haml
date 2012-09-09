@@ -8,11 +8,17 @@
   %strong Name:
   = @project.name
 %p
-  %strong Location:
-  = @project.folder_path
+  %strong URL:
+  = @project.git_url
 %p
-  %strong Branch:
-  = @project.branch
+  %strong Test all branches:
+  = @project.test_all_branches? ? 'Yes' : 'No'
+%p
+  %strong Branches:
+  %ul.branches
+    - @project.branches.each do |branch|
+      %li.branch{class: @project.test_all_branches? || branch.active? ? "active" : ""}
+        = branch.name
 %p
   %strong Recentizer&#153; 3000 Pro:
   = @project.recentizer? ? 'On' : 'Off'

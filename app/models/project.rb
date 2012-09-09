@@ -1,13 +1,14 @@
 class Project < ActiveRecord::Base
-  has_many :builds, dependent: :destroy
-  has_many :commands, dependent: :destroy
-  accepts_nested_attributes_for :commands
   has_many :rights
   has_many :users, through: :rights
+  has_many :builds, dependent: :destroy
+  has_many :commands, dependent: :destroy
+  has_many :branches
 
-  validates :folder_path, uniqueness: true
+  accepts_nested_attributes_for :commands, :branches
+
+  validates :name, :git_url, :hook_token, presence: true
   validate :unique_command_positions
-  validates :name, :folder_path, :branch, :hook_token, presence: true
 
   before_validation :create_hook_token, on: :create
 
@@ -37,6 +38,10 @@ class Project < ActiveRecord::Base
     finished_status.present?
   end
 
+  def has_active_branches?
+    branches.active.any?
+  end
+
   def never_built?
     builds.none?
   end
@@ -49,7 +54,11 @@ class Project < ActiveRecord::Base
     errors.add(:commands, 'must have a non-ambiguous order') unless commands.map(&:position).size == commands.map(&:position).uniq.size
   end
 
-private
+  def fetch_branches
+    self.branches = SuperGit.branches_for_url(git_url).map { |branch_name| Branch.new name: branch_name }
+  end
+
+  private
 
   def create_hook_token
     self.hook_token = SecureRandom.hex(8)

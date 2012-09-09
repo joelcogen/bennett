@@ -11,3 +11,32 @@ class window.Projects
 $ ->
   $('select.right-role-select, select.invitation-role-select').change (e) ->
     $(e.target).closest('form').submit()
+
+  $("#fetch-git-link").live "click", (e) ->
+    e.preventDefault()
+    form = $(e.target).closest("form")
+    $("#fetch-git-link").hide()
+    $("#fetch-loader").show()
+    $.ajax
+      url: form.attr("action")
+      type: "post"
+      data: form.serialize()
+      success: (data) ->
+        form.replaceWith(data)
+        $("#fetch-git-link").hide()
+        $("#fetch-loader").hide()
+        $("#fetch-success").show()
+      error: ->
+        $("#fetch-git-link").show()
+        $("#fetch-loader").hide()
+        $("#fetch-error").show()
+        $("#project_git_url").focus()
+
+  $("#project_git_url").live "change", (e) ->
+    $("#fetched-project-fields").remove()
+    $("#fetch-git-link").show()
+    $("#fetch-success #fetch-error #fetch-loader").hide()
+
+  $("#project_test_all_branches").change ->
+    $("ul.branches li.branch").toggle()
+

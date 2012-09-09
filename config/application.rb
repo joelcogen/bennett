@@ -16,9 +16,11 @@ module Bennett
     # -- all .rb files in that directory are automatically loaded.
 
     # Custom directories with classes and modules you want to be autoloadable.
+    # FIXME: remove form_builder and will_paginate from here. Switch to Kaminari if need be
     config.autoload_paths += %W(
       #{config.root}/lib/form_builders
       #{config.root}/lib/will_paginate
+      #{config.root}/lib/bennett
     )
 
     # Only load the plugins named here, in the order given (default is alphabetical).

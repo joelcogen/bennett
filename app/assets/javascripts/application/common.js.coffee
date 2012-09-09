@@ -1,3 +1,8 @@
+$.fn.show = ->
+  this.removeClass("hide")
+$.fn.hide = ->
+  this.addClass("hide")
+
 $ ->
   $('.alert-message a').click (e) ->
     e.preventDefault()

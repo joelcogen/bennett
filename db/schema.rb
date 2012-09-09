@@ -11,7 +11,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120717114259) do
+ActiveRecord::Schema.define(:version => 20120803185338) do
+
+  create_table "branches", :force => true do |t|
+    t.integer "project_id"
+    t.string  "name"
+    t.boolean "active"
+  end
 
   create_table "builds", :force => true do |t|
     t.integer  "project_id"
@@ -43,13 +49,13 @@ ActiveRecord::Schema.define(:version => 20120717114259) do
   create_table "projects", :force => true do |t|
     t.string   "name"
     t.boolean  "recentizer"
-    t.string   "branch"
-    t.string   "folder_path"
-    t.datetime "created_at",                       :null => false
-    t.datetime "updated_at",                       :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "hook_token"
-    t.boolean  "build_nightly", :default => false
-    t.boolean  "public",        :default => false
+    t.boolean  "build_nightly",     :default => false
+    t.boolean  "public",            :default => false
+    t.string   "git_url"
+    t.boolean  "test_all_branches"
   end
 
   create_table "results", :force => true do |t|
