@@ -45,7 +45,12 @@
         = f.label :build_nightly, class: "checkbox-style1"
         .clear
         %span.help-block Build every night at 1:00 regardless of activity
+      - f.labeled_input :public do
+        .input.checkbox-btn
+          = f.check_box :public
+        = f.label :public, :class => "checkbox-style1"
+        .clear
+        %span.help-block Make this project publicly visible
 
       .input
         = f.submit "Save", class: "btn"
-

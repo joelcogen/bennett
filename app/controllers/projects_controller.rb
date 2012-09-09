@@ -4,6 +4,7 @@ class ProjectsController < ApplicationController
   load_and_authorize_resource :except => :add_user_or_invite
 
   def index
+    redirect_to(login_url) and return unless user_signed_in? || @projects.any?
     respond_to do |format|
       format.html
       format.js { render partial: @projects }
