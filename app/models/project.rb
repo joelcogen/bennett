@@ -1,9 +1,9 @@
 class Project < ActiveRecord::Base
   has_many :rights
   has_many :users, through: :rights
-  has_many :builds, dependent: :destroy
-  has_many :commands, dependent: :destroy
   has_many :branches
+  has_many :builds, through: :branches, dependent: :destroy
+  has_many :commands, dependent: :destroy
 
   accepts_nested_attributes_for :commands, :branches
 
@@ -58,6 +58,10 @@ class Project < ActiveRecord::Base
 
   def fetch_branches
     self.branches = SuperGit.branches_for_url(git_url).map { |branch_name| Branch.new name: branch_name }
+  end
+
+  def should_build?(build)
+    !(recentizer? && last_build != build)
   end
 
   private

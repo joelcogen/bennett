@@ -1,31 +1,27 @@
 class BuildsController < ApplicationController
   load_and_authorize_resource except: :create
 
-  # POST /builds
-  # POST /builds.json
   def create
     @project = Project.find(params[:project_id])
     @build = @project.builds.new(params[:build])
-    @manual = params[:manual]
+    from_hook = params[:t].present?
 
-    if params[:t].present?
+    if from_hook
       raise CanCan::AccessDenied unless @project.hook_token == params[:t]
+      @build.fill_from_hook(params)
     else
       authorize! :create, @build
     end
 
     respond_to do |format|
-      if @manual || @build.new_activity?
-        if @build.save
-          Resque.enqueue(CommitsFetcher, @build.id)
-          format.html { redirect_to @project, notice: 'Build successfully added to queue.' }
-          format.json { render json: @build, status: :created }
-        else
-          format.html { redirect_to @project, notice: 'Error adding build.' }
-          format.json { render json: @build.errors, status: :unprocessable_entity }
-        end
+      if @build.save
+        Resque.enqueue(Builder, @build.id)
+        format.html { redirect_to @project, notice: 'Build successfully added to queue.' }
+        format.json { render json: @build, status: :created }
       else
-        format.json { render status: :not_modified, json: {} }
+        format.html { redirect_to @project, notice: 'Error adding build.' }
+        format.json { render json: @build.errors, status: :unprocessable_entity }
+        # TODO Log this if coming from hook
       end
     end
   end

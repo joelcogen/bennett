@@ -1,5 +1,3 @@
-require "super_git"
-
 class ProjectsController < ApplicationController
   load_and_authorize_resource :except => :add_user_or_invite
 

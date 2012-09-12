@@ -26,7 +26,7 @@ class UsersController < ApplicationController
 
   def create
     if @user.save
-      @user.update_attribute :admin, true
+      @user.update_attributes admin: true
       flash[:success] = 'Welcome to Bennett!'
       sign_in(@user, :bypass => true)
       redirect_to root_url

@@ -48,7 +48,7 @@ class Result < ActiveRecord::Base
 
   STATUS.keys.each do |status|
     define_method status do
-      update_attribute :status_id, STATUS[status]
+      update_attributes status_id: STATUS[status]
     end
 
     define_method "#{status}?" do
@@ -57,11 +57,11 @@ class Result < ActiveRecord::Base
   end
 
   def start_now
-    update_attribute :start_time, Time.now
+    update_attributes start_time: Time.now
   end
 
   def end_now
-    update_attribute :end_time, Time.now
+    update_attributes end_time: Time.now
   end
 
   def log

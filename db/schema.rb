@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120803185338) do
+ActiveRecord::Schema.define(:version => 20120909144321) do
 
   create_table "branches", :force => true do |t|
     t.integer "project_id"
@@ -20,7 +20,6 @@ ActiveRecord::Schema.define(:version => 20120803185338) do
   end
 
   create_table "builds", :force => true do |t|
-    t.integer  "project_id"
     t.string   "commit_hash"
     t.string   "commit_message"
     t.string   "commit_author"
@@ -28,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20120803185338) do
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
     t.string   "commit_author_email"
+    t.integer  "branch_id"
   end
 
   create_table "commands", :force => true do |t|

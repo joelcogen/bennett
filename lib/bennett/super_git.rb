@@ -1,7 +1,7 @@
 class SuperGit
   def self.branches_for_url(url)
-    #return ["deploy", "master", "new-builder", "public-projects"]
-    tmpdir = Dir.mktmpdir
+    tmpdir = "tmp/builds/#{SecureRandom.hex(10)}"
+    Dir.mkdir(tmpdir)
     system "git clone --no-checkout #{url} #{tmpdir}" # This cannot be done using Git :(
     branches = Git.open(tmpdir).branches.remote.collect do |branch|
       branch.to_s.gsub /.*remotes\/origin\//, ""
@@ -12,9 +12,10 @@ class SuperGit
     branches
   end
 
-  def self.clone_commit(url, branch, commit, dir = Dir.mktmpdir)
-    system "git clone --branch #{branch} --single-branch --depth 100 #{url} #{dir}"
-    Git.open(dir).checkout(commit)
+  def self.clone(url, branch, commit = nil, dir = "tmp/builds/#{SecureRandom.hex(10)}")
+    Dir.mkdir(dir)
+    system "git clone --branch #{branch} --single-branch --depth #{commit.nil? ? 100 : 1} #{url} #{dir}"
+    Git.open(dir).checkout(commit) if commit.present?
     dir
   end
 end
