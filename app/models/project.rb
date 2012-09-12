@@ -15,9 +15,13 @@ class Project < ActiveRecord::Base
   scope :public, where(public: true)
 
   def self.build_all_nightly!
-    Project.where(build_nightly: true).each do |project|
-      build = project.builds.create
-      Resque.enqueue(CommitsFetcher, build.id)
+    Project.where(build_nightly: true).map &:build_nightly!
+  end
+
+  def build_nightly!
+    branches.all.each do |branch|
+      build = branch.builds.create
+      Resque.enqueue(Builder, build.id)
     end
   end
 

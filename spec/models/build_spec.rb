@@ -37,28 +37,4 @@ describe Build do
     build.skip!
     result.skipped?.should be_true
   end
-
-  it "can update git" do
-    project = stub_model Project, folder_path: '/tmp', branch: 'master'
-    git = stub
-    git.stub(:reset_hard)
-    git.stub(:checkout)
-    git.should_receive(:pull)
-    Git.should_receive(:open).and_return(git)
-    build = Build.new project: project
-    build.update_commit!
-  end
-
-  it "can build" do
-    project = stub_model Project, folder_path: '/tmp'
-    result = stub_model Result
-    build = Build.new project: project, results: [result]
-    build.should_receive(:update_commit!)
-    result.should_receive(:command).and_return(stub_model Command, command: 'ls -l')
-    result.should_receive(:log_path).and_return('/tmp/bennett_spec_build.log')
-    mailstub = stub
-    CiMailer.should_receive(:build_result).with(build).and_return(mailstub)
-    mailstub.should_receive(:deliver)
-    build.build!
-  end
 end

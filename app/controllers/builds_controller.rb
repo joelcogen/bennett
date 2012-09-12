@@ -3,7 +3,8 @@ class BuildsController < ApplicationController
 
   def create
     @project = Project.find(params[:project_id])
-    @build = @project.builds.new(params[:build])
+    @branch  = @project.branches.find_by_name(params[:branch])
+    @build   = @branch.builds.new(params[:build])
     from_hook = params[:t].present?
 
     if from_hook

@@ -21,24 +21,24 @@ class Ability
         end
 
         can :manage, Build do |b|
-          Right.find_by_project_id_and_user_id(b.project_id, user.id).try :admin?
+          Right.find_by_project_id_and_user_id(b.project.id, user.id).try :admin?
         end
         can :create, Build do |b|
-          Right.find_by_project_id_and_user_id(b.project_id, user.id).try :developer?
+          Right.find_by_project_id_and_user_id(b.project.id, user.id).try :developer?
         end
         can :read, Build do |b|
-          Right.find_by_project_id_and_user_id(b.project_id, user.id).present?
+          Right.find_by_project_id_and_user_id(b.project.id, user.id).present?
         end
 
         can :read, Result do |r|
-          Right.find_by_project_id_and_user_id(r.build.project_id, user.id).present?
+          Right.find_by_project_id_and_user_id(r.build.project.id, user.id).present?
         end
 
         can :manage, Invitation do |i|
-          Right.find_by_project_id_and_user_id(i.project_id, user.id).try :admin?
+          Right.find_by_project_id_and_user_id(i.project.id, user.id).try :admin?
         end
         can :manage, Right do |r|
-          Right.find_by_project_id_and_user_id(r.project_id, user.id).try :admin?
+          Right.find_by_project_id_and_user_id(r.project.id, user.id).try :admin?
         end
       end
     else

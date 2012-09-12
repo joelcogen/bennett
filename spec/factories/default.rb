@@ -30,9 +30,18 @@ FactoryGirl.define do
   end
 
   factory :project do
-    name        { Faker::Company.name }
-    branch      'master'
-    folder_path { "/tmp/bennett/#{SecureRandom.uuid}/" }
+    name              { Faker::Company.name }
+    branches          { |branches| [branches.association(:branch)] }
+    git_url           { "git@github.com:belighted/#{SecureRandom.uuid}.git" }
+    recentizer        false
+    test_all_branches true
+    public            false
+    build_nightly     false
+  end
+
+  factory :branch do
+    name   { Faker::Lorem.words(1)[0] }
+    active true
   end
 
   factory :build do

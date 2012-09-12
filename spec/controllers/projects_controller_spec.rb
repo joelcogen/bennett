@@ -23,7 +23,7 @@ describe ProjectsController do
     right = FactoryGirl.create :right, user: subject.current_user, project: project, role: 'auditor'
     put 'add_user_or_invite', myparams
     response.should redirect_to(root_url)
-    right.update_attribute :role, 'developer'
+    right.update_attributes role: 'developer'
     put 'add_user_or_invite', myparams
     response.should redirect_to(root_url)
   end
@@ -38,7 +38,7 @@ describe ProjectsController do
     right = FactoryGirl.create :right, user: subject.current_user, project: project, role: 'auditor'
     put 'add_user_or_invite', myparams
     response.should redirect_to(root_url)
-    right.update_attribute :role, 'developer'
+    right.update_attributes role: 'developer'
     put 'add_user_or_invite', myparams
     response.should redirect_to(root_url)
   end
